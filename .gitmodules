@@ -1,0 +1,9 @@
+[submodule "cfg"]
+	path = cfg
+	url = git@github.com:DSciLab/cfg.git
+[submodule "cvutils"]
+	path = cvutils
+	url = git@github.com:DSciLab/cvutils.git
+[submodule "mlutils"]
+	path = mlutils
+	url = git@github.com:DSciLab/mlutils.git
