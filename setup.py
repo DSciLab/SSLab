@@ -12,9 +12,9 @@ def gen_code():
 __version__ = f'0.0.1.{gen_code()}'
 
 
-setup(name='trans_lab',
+setup(name='ssl_lab',
       version=__version__,
-      description='Transformer Lab',
+      description='Self-Supervised Lab',
       author='tor4z',
       author_email='vwenjie@hotmail.com',
       install_requires=[
