@@ -1,0 +1,21 @@
+gpu_black_list:
+  rtx1:
+    - -1
+
+  rtx2:
+    - -1
+
+  rtx3:
+    - -1
+
+  rtx4:
+    - -1
+
+  rtx5:
+    - -1
+
+  rtx6:
+    - -1
+
+  rtx7:
+    - -1

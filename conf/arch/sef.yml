@@ -1,0 +1,23 @@
+import:
+  - ../common
+
+normalization: softmax
+
+resnet_kwargs:
+  pretrained: false
+  progress: true
+  nparts: 4
+  attention: true
+
+network: resnet50
+
+lr: 1.0e-2
+num_classes: 2
+batch_size: 16
+num_workers: 8
+epochs: 200
+
+# ========
+lmgm: 1
+entropy_weight: 1
+soft_weight: 0.05

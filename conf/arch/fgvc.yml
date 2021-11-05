@@ -1,0 +1,19 @@
+import:
+  - ../common
+
+###################
+# Training Config
+###################
+num_workers: 8
+batch_size: 16
+epochs: 200
+lr: 1.0e-3
+
+###################
+# Model Config
+###################
+normalization: softmax
+num_classes: 2
+net: resnet50
+num_attentions: 32
+beta: 5.0e-2
