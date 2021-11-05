@@ -147,7 +147,8 @@ class NetWrapper(nn.Module):
         hidden = self.hidden[x.device]
         self.hidden.clear()
 
-        assert hidden is not None, f'hidden layer {self.layer} never emitted an output'
+        assert hidden is not None,\
+            f'hidden layer {self.layer} never emitted an output'
         return hidden
 
     def forward(self, x, return_projection = True):
@@ -177,6 +178,7 @@ class BYOL(nn.Module):
     ):
         super().__init__()
         self.net = net
+        self.image_size = image_size
 
         # default SimCLR augmentation
 
@@ -193,8 +195,8 @@ class BYOL(nn.Module):
             ),
             T.RandomResizedCrop((image_size, image_size)),
             T.Normalize(
-                mean=torch.tensor([0.485, 0.456, 0.406]),
-                std=torch.tensor([0.229, 0.224, 0.225])),
+                mean=torch.tensor([189.47680262, 185.68525998, 177.09843632]),
+                std=torch.tensor([39.60534874, 39.47619922, 37.76661493])),
         )
 
         self.augment1 = default(augment_fn, DEFAULT_AUG)
@@ -273,3 +275,24 @@ class BYOL(nn.Module):
 
         loss = loss_one + loss_two
         return loss.mean()
+
+
+class BYOLClassifier(nn.Module):
+    def __init__(self, opt, byol_model):
+        super().__init__()
+        self.num_classes = opt.num_classes
+        self.byol_model = byol_model
+        image_size = byol_model.image_size
+        self.fc = None
+        self.forward(torch.randn(2, 3, image_size, image_size))
+
+    @singleton('fc')
+    def _get_fc(self, hidden):
+        _, dim = hidden.shape
+        fc = nn.Linear(dim, self.num_classes)
+        return fc.to(hidden.device)
+
+    def forward(self, x):
+        x = self.byol_model(x, return_embedding=True, return_projection=False)
+        fc = self._get_fc(x)
+        return fc(x)

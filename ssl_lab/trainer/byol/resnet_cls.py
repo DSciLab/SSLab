@@ -5,37 +5,33 @@ from torch.optim import SGD
 from torch.optim.lr_scheduler import StepLR
 from torch import nn
 import torch
-import time
 
 from mlutils.inspector import Inspector
 
-from .base import BYOLBaseTrainer
-from ssl_lab.network.resnet import ResNet
-from ssl_lab.network.byol.byol import BYOL
+from .base import ResNetClsBaseTrainer
+from ssl_lab.network.byol.byol import BYOLClassifier
 
 
-__all__ = ['BYOLResNet50SSLTrainer']
+__all__ = ['BYOLResNet50ClsTrainer']
 
 
 @mod.register('arch')
-class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
+class BYOLResNet50ClsTrainer(ResNetClsBaseTrainer):
     @gen.synchrony
     def __init__(self, opt: Opts) -> None:
         super().__init__(opt)
-        net = ResNet(opt, 'resnet50')
-        net = BYOL(
-            net,
-            image_size=opt.input_size,
-            hidden_layer=opt.hidden_layer
-        )
+        ssl_model = self.load_ssl_model()
+        net = BYOLClassifier(opt, ssl_model)
         # print(net)
         self.optimizer = SGD(
             net.parameters(), lr=opt.lr, momentum=0.9,
             weight_decay=opt.get('weight_decay', 1.0e-4))
-        self.scheduler = StepLR(self.optimizer, 10, 0.98)
+        self.scheduler = StepLR(self.optimizer, 2, 0.98)
         self.net = yield self.to_gpu(net)
         self.loss_fn = nn.CrossEntropyLoss()
-        self.save_model(self.net)
+        # self.eval_no_grad = False
+        # self.inspector = Inspector(opt, self.net)
+        # self.inspector.regist_layers('backbone.layer4.2.relu')
 
     @gen.detach_cpu
     @gen.synchrony
@@ -46,13 +42,13 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
         labels = labels.type(torch.int64)
 
         self.optimizer.zero_grad()
-        loss = self.net(images)
-        # loss = self.loss_fn(logits, labels)
+        logits = self.net(images)
+        loss = self.loss_fn(logits, labels)
         loss.backward()
         self.optimizer.step()
 
-        # preds = self.logit_to_pred(logits)
-        return loss, None, labels
+        preds = self.logit_to_pred(logits)
+        return loss, preds, labels
 
     @gen.detach_cpu
     @gen.synchrony
@@ -62,8 +58,8 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
         labels = yield self.to_gpu(labels)
         labels = labels.type(torch.int64)
 
-        loss = self.net(images)
-        # loss = self.loss_fn(logits, labels)
+        logits = self.net(images)
+        loss = self.loss_fn(logits, labels)
 
         self.show_images('eval_image', images)
         # self.inspector.inspect(images)
@@ -77,8 +73,8 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
         #           f'label: {labels} <br/>'
         #           f'result: {pred == labels}')
         # self.dashboard.add_text('reselt', result)
-        # preds = self.logit_to_pred(logits)
-        return loss, None, labels
+        preds = self.logit_to_pred(logits)
+        return loss, preds, labels
 
     @gen.synchrony
     def inference(self, inp: Tensor) -> Tensor:

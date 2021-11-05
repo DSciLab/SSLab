@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from ..base import BaseTrainer
 
 
-class ResNetCLSBaseTrainer(BaseTrainer):
+class ResNetClsBaseTrainer(BaseTrainer):
     def __init__(
         self,
         opt: Opts,

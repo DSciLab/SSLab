@@ -37,7 +37,7 @@ class InWClsDatasetBase(InWBaseDataset):
             self.transform = tf.Compose([
                 tf.TransposeTorch(),
                 tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
+                tf.RandomTransform(opt.rand_k, check=False),
                 tf.Resize(opt.input_size),
                 tf.ToTensor(),
             ])
@@ -105,142 +105,230 @@ class InWClsDataset(InWClsDatasetBase):
 @mod.register('dataset')
 class InWCls224Dataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
 
 
 @mod.register('dataset')
 class InWCls256Dataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
 
 
 @mod.register('dataset')
 class InWCls448Dataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                # tf.RandomRotate(),
-                tf.ResizeRandomCenterCroPad(
-                    opt.input_size,
-                    rand_range=[0.5, 1.5]
-                ),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    # tf.RandomRotate(),
+                    tf.ResizeRandomCenterCroPad(
+                        opt.input_size,
+                        rand_range=[0.5, 1.5]
+                    ),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
 
 
 @mod.register('dataset')
 class InWCls448SQDataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
 
 
 @mod.register('dataset')
 class InWCls224SQDataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
 
 
 @mod.register('dataset')
 class InWCls256SQDataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+
 
 @mod.register('dataset')
 class InWCls448WDataset(InWClsDatasetBase):
     def set_transformer(self, opt: Opts):
-        if self.training:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                tf.RandomTransform(opt.rand_k),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+        if opt.get('on_ssl', False) and opt.get('ssl_id', None) is None:
+            # ssl
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
         else:
-            self.transform = tf.Compose([
-                tf.TransposeTorch(),
-                tf.Normalize(),
-                # tf.Resize(opt.input_size),
-                tf.ToTensor(),
-            ])
+            # cls
+            if self.training:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    tf.RandomTransform(opt.rand_k, check=False),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])
+            else:
+                self.transform = tf.Compose([
+                    tf.TransposeTorch(),
+                    tf.Normalize(mean=opt.mean, std=opt.std),
+                    # tf.Resize(opt.input_size),
+                    tf.ToTensor(),
+                ])

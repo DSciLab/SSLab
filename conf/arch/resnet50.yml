@@ -12,3 +12,4 @@ num_workers: 8
 epochs: 200
 
 normalization: sigmoid
+hidden_layer: backbone.fc

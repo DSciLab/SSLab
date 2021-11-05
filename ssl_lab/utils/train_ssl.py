@@ -9,7 +9,7 @@ from ssl_lab.dataset import *
 def train(opt: Opts) -> None:
     init(opt)
     trainer = mod.get('arch', opt.arch)(opt)
-    trainer.set_metrics(mt.Accuracy, mt.Recall, mt.ECE)
+    # trainer.set_metrics(mt.Accuracy)
 
     for k, (training_set, val_set) in enumerate(get_dataset(opt)):
         training_loader = DataLoader(

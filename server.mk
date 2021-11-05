@@ -16,6 +16,9 @@ install:
 	$(PIP) install dist/*.tar.gz
 
 
+all: dashboard lab
+
+
 init_server: $(SERVER_CONF)
 	m4 -D_dashboard_port_=$(DASHBOARD_PORT) -D_hostname_=$(HOSTNAME) $^ > $(SERVER_CONF_OUT)
 
