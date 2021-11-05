@@ -1,0 +1,31 @@
+import:
+  - ../common
+
+normalization: softmax
+num_classes: 2
+data_len: 300
+pretrained: false
+
+###################
+# Training Config
+###################
+num_workers: 8
+batch_size: 16
+epochs: 300
+lr: 1.0e-3
+min_lr: 1.0e-5
+weight_decay: .05
+warmup_lr: 1.0e-6
+cooldown_epochs: 10
+decay_rate: 0.1
+sched: cosine
+warmup_epochs: 5
+smoothing: 0.1
+
+###################
+# Model Config
+###################
+network: ps_vit_b_18
+vit_kws:
+  drop_rate: 0.1
+  drop_path_rate: 0.1

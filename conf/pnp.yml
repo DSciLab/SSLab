@@ -1,0 +1,38 @@
+arch:
+  ResNet50ClsTrainer: arch/resnet50_cls.yml
+  MobileLargeClsTrainer: arch/mobile_cls.yml
+  MobileSmallClsTrainer: arch/mobile_cls.yml
+  FGVCTrainer: arch/fgvc.yml
+  WSDANTrainer: arch/wsdan.yml
+  TransFGTrainer: arch/trans_fg.yml
+  VitTrainer: arch/vit.yml
+  T2TTrainer: arch/t2t.yml
+  CvTTrainer: arch/cvt.yml
+  T2TOfficialTrainer: arch/t2t_official.yml
+  TNTTrainer: arch/tnt.yml
+  SEFTrainer: arch/sef.yml
+  DPTTrainer: arch/dpt.yml
+  PVTTrainer: arch/pvt.yml
+  ViTPSTrainer: arch/vit_ps.yml
+  TFGTrainer: arch/tfg.yml
+  MixTFGTrainer: arch/mix_tfg.yml
+  CrossViTTrainer: arch/cross_vit.yml
+  CaitTrainer: arch/cait.yml
+  DeepViTTrainer: arch/deep_vit.yml
+  CCTTrainer: arch/cct.yml
+  PitTrainer: arch/pit.yml
+  LeViTTrainer: arch/le_vit.yml
+  TwinsSVTTrainer: arch/twins_svt.yml
+  NestTrainer: arch/nest.yml
+  RPETrainer: arch/rpe.yml
+
+
+dataset:
+  InWClsDataset: data/inw_cls.yml
+  InWClsCropDataset: data/inw_cls.yml
+  InWCls224Dataset: data/inw_cls224.yml
+  InWCls256Dataset: data/inw_cls256.yml
+  InWCls224SQDataset: data/inw_cls224sq.yml
+  InWCls256SQDataset: data/inw_cls256sq.yml
+  InWCls448Dataset: data/inw_cls448.yml
+  InWCls448SQDataset: data/inw_cls448sq.yml

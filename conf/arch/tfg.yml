@@ -1,0 +1,54 @@
+import:
+  - ../common
+
+normalization: softmax
+num_classes: 2
+data_len: 500
+pretrained: false
+batch_size: 16
+
+###################
+# Training Config
+###################
+num_workers: 8
+epochs: 300
+lr: 1.0e-4
+min_lr: 1.0e-8
+weight_decay: 0.0
+warmup_lr: 1.0e-6
+cooldown_epochs: 10
+decay_rate: 0.1
+sched: cosine
+warmup_epochs: 5
+smoothing: 0.0
+
+###################
+# Model Config
+###################
+tfg_kws:
+  drop_rate: 0
+  # drop_path: null
+  drop_path_rate: 0.1
+  # drop_block_rate: null
+  # global_pool: null
+  # bn_tf: false
+  # bn_momentum: null
+  # bn_eps: null
+
+network_size: s
+
+contrast_loss_weight: 0.0
+slide_step: 12
+smoothing_value: 0.0
+loss_scale: 0
+gradient_accumulation_steps: 1
+max_grad_norm: 1.0
+warmup_steps: 5
+# cosine
+# linear
+decay_type: cosine
+num_steps: 10000
+zero_head: true
+patch_size: 16
+
+warming_up_epoch: 80

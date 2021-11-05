@@ -1,0 +1,14 @@
+import:
+  - ./comm
+
+data_root: /data/cwj/data/ink_and_wash
+gen_root: /data/cwj/data/ink_and_wash/gen224sq
+
+meta_path: /data/cwj/data/ink_and_wash/meta_path224sq.pkl
+
+image_chan: 3
+input_size: 224
+training_proportion: 0.8
+# data_len: 3000
+enable_resize: true
+enable_sq: true

@@ -1,0 +1,6 @@
+import:
+  - ./server_conf
+  - ./gpu_black_list
+
+dashboard: true
+seed: 100
