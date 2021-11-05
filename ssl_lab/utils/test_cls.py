@@ -4,7 +4,7 @@ from cfg import Opts
 import tqdm
 import numpy as np
 from mlutils import mod, init, Log
-from trans_lab.trainer import *
+from ssl_lab.trainer import *
 
 
 def test(opt: Opts) -> None:

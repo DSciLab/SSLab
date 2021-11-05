@@ -1,6 +1,5 @@
 from torch import nn
 from torch import Tensor
-import torch
 from torchvision.models.resnet import *
 
 from cfg import Opts

@@ -1,7 +1,7 @@
 PYTHON              := python
 PIP                 := pip
-LAB_PORT            := 10065
-DASHBOARD_PORT      := 20065
+LAB_PORT            := 10075
+DASHBOARD_PORT      := 20075
 HOST_IP             := 0.0.0.0
 APP_DIR             := $(shell pwd)
 HOSTNAME            := $(shell hostname)

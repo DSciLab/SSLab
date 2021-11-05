@@ -14,8 +14,10 @@ from torchvision import transforms as T
 def default(val, def_val):
     return def_val if val is None else val
 
+
 def flatten(t):
     return t.reshape(t.shape[0], -1)
+
 
 def singleton(cache_key):
     def inner_fn(fn):
@@ -31,8 +33,10 @@ def singleton(cache_key):
         return wrapper
     return inner_fn
 
+
 def get_module_device(module):
     return next(module.parameters()).device
+
 
 def set_requires_grad(model, val):
     for p in model.parameters():
@@ -255,7 +259,10 @@ class BYOL(nn.Module):
         online_pred_two = self.online_predictor(online_proj_two)
 
         with torch.no_grad():
-            target_encoder = self._get_target_encoder() if self.use_momentum else self.online_encoder
+            if self.use_momentum:
+                target_encoder = self._get_target_encoder()
+            else:
+                target_encoder = self.online_encoder
             target_proj_one, _ = target_encoder(image_one)
             target_proj_two, _ = target_encoder(image_two)
             target_proj_one.detach_()
