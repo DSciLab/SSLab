@@ -1,0 +1,4 @@
+ssl_model: best
+on_ssl: true
+drop_last: True
+temperature: 0.5

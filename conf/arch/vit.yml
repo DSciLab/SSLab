@@ -22,3 +22,5 @@ patch_strides: 16
 clip_pretrained: false
 checkpoint: false
 checkpoint_nchunks: 2
+
+hidden_layer: to_latent

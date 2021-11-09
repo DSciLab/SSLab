@@ -4,3 +4,9 @@ import:
 
 dashboard: true
 seed: 100
+img_freq: 1
+
+
+ssl_metric_lr: 0.001
+ssl_metric_momentum: 0.9
+ssl_metric_epochs: 50

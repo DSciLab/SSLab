@@ -274,7 +274,7 @@ class BYOL(nn.Module):
         loss_two = loss_fn(online_pred_two, target_proj_one.detach())
 
         loss = loss_one + loss_two
-        return loss.mean()
+        return loss.mean(), online_proj_one
 
 
 class BYOLClassifier(nn.Module):

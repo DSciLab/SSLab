@@ -2,6 +2,7 @@ from typing import Generator
 from cfg import Opts
 from mlutils import mod
 from .inw_cls import *
+from .inw_ssl import *
 from .inw_cls_crop import *
 
 

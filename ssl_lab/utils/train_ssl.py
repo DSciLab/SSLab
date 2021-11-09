@@ -16,12 +16,16 @@ def train(opt: Opts) -> None:
             training_set,
             batch_size=opt.batch_size,
             shuffle=True,
-            num_workers=opt.num_workers)
+            num_workers=opt.num_workers,
+            drop_last=opt.get('drop_last', False)
+        )
         val_loader = DataLoader(
             val_set,
             batch_size=opt.get('val_batch_size', opt.batch_size),
             shuffle=False,
-            num_workers=opt.num_workers)
+            num_workers=opt.num_workers,
+            drop_last=opt.get('drop_last', False)
+        )
 
         # save data_source
         saver = trainer.saver

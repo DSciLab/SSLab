@@ -6,7 +6,7 @@ from cvutils import transform as tf
 from mlutils import mod, split_by_kfold, split_by_proportion, Log
 from cfg import Opts
 
-from trans_lab.utils.preprocessing import load_npy, load_pickle
+from ssl_lab.utils.preprocessing import load_npy, load_pickle
 
 
 class InWBaseDataset(Dataset):

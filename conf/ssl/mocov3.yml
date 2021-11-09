@@ -1,0 +1,4 @@
+ssl_model: best
+on_ssl: true
+moco_m: 0.99
+moco_m_cos: false

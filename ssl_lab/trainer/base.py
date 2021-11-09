@@ -6,6 +6,7 @@ from cfg import Opts
 from cvutils import transform as tf
 from torch.functional import Tensor
 from ssl_lab.utils.model_loader import ModelLoader
+from ssl_lab.utils.ssl_metric import SSLMetric
 
 
 class BaseTrainer(Trainer):
@@ -16,6 +17,7 @@ class BaseTrainer(Trainer):
     ) -> None:
         super().__init__(opt, device_id=device_id)
         self.model_loader = ModelLoader(opt, self.saver)
+        self.ssl_metric = SSLMetric(opt)
         self.to_255 = tf.DeNormalize(
             mean=[189.47680262, 185.68525998, 177.09843632],
             std=[39.60534874, 39.47619922, 37.76661493])
@@ -32,3 +34,16 @@ class BaseTrainer(Trainer):
         model = copy.deepcopy(model)
         model = model.cpu()
         self.saver.save_object(model, 'raw_model.pkl')
+
+    @property
+    def best(self) -> bool:
+        if self.ssl_metric.available:
+            return self.ssl_metric.best
+        else:
+            return super().best
+
+    def on_epoch_end(self):
+        if self.ssl_metric.available:
+            self.ssl_metric.report()
+            self.ssl_metric.reset()
+        super().on_epoch_end()

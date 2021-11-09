@@ -5,8 +5,8 @@ from cvutils import imread
 from mlutils import mod, Log
 from cfg import Opts
 
-from trans_lab.utils.data_split import split_by_k_fold, split_by_proportion
-from trans_lab.utils.preprocessing import load_npy, load_pickle
+from ssl_lab.utils.data_split import split_by_k_fold, split_by_proportion
+from ssl_lab.utils.preprocessing import load_npy, load_pickle
 from .base import InWBaseDataset
 from .custom_transform import RandCropResize, CenterCropResize
 

@@ -46,7 +46,8 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
         labels = labels.type(torch.int64)
 
         self.optimizer.zero_grad()
-        loss = self.net(images)
+        loss, feat = self.net(images)
+        self.ssl_metric.update_train(feat, labels)
         # loss = self.loss_fn(logits, labels)
         loss.backward()
         self.optimizer.step()
@@ -62,7 +63,8 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
         labels = yield self.to_gpu(labels)
         labels = labels.type(torch.int64)
 
-        loss = self.net(images)
+        loss, feat = self.net(images)
+        self.ssl_metric.update_eval(feat, labels)
         # loss = self.loss_fn(logits, labels)
 
         self.show_images('eval_image', images)
@@ -97,3 +99,4 @@ class BYOLResNet50SSLTrainer(BYOLBaseTrainer):
 
     def on_epoch_end(self) -> None:
         self.scheduler.step()
+        super().on_epoch_end()
