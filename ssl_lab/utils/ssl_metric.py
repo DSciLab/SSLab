@@ -1,8 +1,10 @@
+from typing import Optional
 import numpy as np
 import copy
 import torch
 from torch import nn
 from torch import Tensor
+from torch._C import device
 from torch.nn import functional as F
 from torch.optim import SGD
 from cfg import Opts
@@ -83,7 +85,8 @@ class LRTrainer:
 
 
 class Meter:
-    def __init__(self) -> None:
+    def __init__(self, name) -> None:
+        self.name = name
         self._data = []
 
     def reset(self) -> None:
@@ -99,7 +102,7 @@ class Meter:
         min_ = np.min(data)
         avg_ = np.mean(data)
         latest_ = data[-1]
-        return (f'[SSL Metric] | latest {latest_:.5f} | max {max_:.5f} | '
+        return (f'[{self.name}] | latest {latest_:.5f} | max {max_:.5f} | '
                 f'min {min_:.5f} | avg {avg_:.5f} | cnt {cnt_} |')
 
     __repr__ = __str__
@@ -112,7 +115,7 @@ class SSLMetric:
         self.num_classes = opt.num_classes
         self.available = False
         self.device = None
-        self.meter = Meter()
+        self.meter = Meter('SSL Metric')
         self.opt = opt
         self.in_dim = None
         self.train_feats = []
@@ -193,7 +196,75 @@ class SSLMetric:
 
     @property
     def best(self) -> bool:
-        return self.score > self._best_score
+        best = self.score > self._best_score
+        if best: self._best_score = self.score
+        return best
+
+    def report(self):
+        self.score
+        Log.info(self.meter)
+
+
+class SSLEuclideanMetric:
+    def __init__(self, opt: Opts) -> None:
+        self.num_classes = opt.num_classes
+        self._score = None
+        self.available = False
+        self.meter = Meter('SSL Euclidiean Metric')
+        self._best_score = -np.Inf
+        self._feats = []
+        self._targets = []
+
+    def reset(self):
+        self._score = None
+        self._feats = []
+        self._targets = []
+
+    def update(
+        self,
+        feat: Tensor,
+        target: Tensor
+    ) -> None:
+        self.available = True
+        self._feats.append(feat)
+        self._targets.append(target)
+
+    def euclidean_metric(
+        self,
+        A: Tensor,
+        B: Optional[Tensor]=None
+    ) -> Tensor:
+        if B is None:
+            A = F.normalize(A, p=2, dim=1)
+            mask = torch.eye(A.size(0), device=A.device, dtype=torch.long)
+            matrix = torch.mm(A, A.T)
+            return matrix.view(-1)[mask.view(-1)==0].mean()
+        else:
+            A = F.normalize(A, p=2, dim=1)
+            B = F.normalize(B, p=2, dim=1)
+            return torch.mm(A, B.T).mean()
+
+    @property
+    def score(self) -> float:
+        if self._score is None:
+            assert len(self._feats) > 0 or len(self._targets) > 0
+            feats = torch.cat(self._feats, dim=0)
+            targets = torch.cat(self._targets, dim=0)
+            dis_all = self.euclidean_metric(feats)
+            dis_inner_class = []
+            for i in range(self.num_classes):
+                class_mask = targets == i
+                feats_this_class = feats[class_mask]
+                dis_inner_class.append(self.euclidean_metric(feats_this_class))
+            self._score = (torch.tensor(dis_inner_class).mean() / dis_all).cpu().item()
+            self.meter.append(self._score)
+        return self._score
+
+    @property
+    def best(self) -> bool:
+        best = self.score > self._best_score
+        if best: self._best_score = self.score
+        return best
 
     def report(self):
         self.score

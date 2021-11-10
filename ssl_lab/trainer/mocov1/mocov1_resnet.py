@@ -64,6 +64,7 @@ class MoCoV1ResNet50SSLTrainer(MoCoV1BaseTrainer):
 
         loss, feat = self.net(images1, images2)
         self.ssl_metric.update_eval(feat, labels)
+        self.ssl_eu_metric.update(feat, labels)
         # loss = self.loss_fn(logits, labels)
 
         self.show_images('eval_image', images1)
